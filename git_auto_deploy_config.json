@@ -1,0 +1,20 @@
+{
+  "logfilepath": "/home/core/Shipmee_CID_Workspace/gitautodeploy.log",
+  "host": "0.0.0.0",
+  "port": 8001,
+  "global_deploy": [
+    "echo Deploy started!",
+    "echo Deploy completed!"
+  ],
+  "log-level": "INFO",
+  "repositories": [
+    {
+      "url": "https://github.com/ISSPUS/Shipmee.git",
+      "branch": "testCID",
+      "remote": "origin",
+      "path": "/home/core/Shipmee_CID_Workspace/repositories/Shipmee-testCID",
+      "deploy": "echo deploying && bash /home/core/Shipmee_CID/testCID-conf/continuousDeploy.sh"
+    }
+  ]
+}
+ 
