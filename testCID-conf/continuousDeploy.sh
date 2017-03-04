@@ -113,6 +113,7 @@ docker restart $ENV_NAME-$BRANCH-mysql
 sleep 5
 
 docker run -d --name $ENV_NAME-$BRANCH-tomcat \
+    --user root \
     --link $ENV_NAME-$BRANCH-mysql:$MYSQL_PROJECT_ROUTE \
     -v "$PATH_ROOT/deploys/$ENV_NAME/$BRANCH/webapps/":/usr/local/tomcat/webapps \
     -v "$CONF_TOMCAT_SERVER":/usr/local/tomcat/conf/server.xml \
@@ -121,7 +122,7 @@ docker run -d --name $ENV_NAME-$BRANCH-tomcat \
     -e VIRTUAL_PORT=8080 \
     -e "LETSENCRYPT_HOST=$URL_VIRTUAL_HOST" \
     -e "LETSENCRYPT_EMAIL=shipmee.contact@gmail.com" \
-    tomcat:8
+    tomcat:8.5
 
 docker exec $ENV_NAME-$BRANCH-tomcat \
     bash -c "echo "Europe/Madrid" > /etc/timezone && dpkg-reconfigure -f noninteractive tzdata"
