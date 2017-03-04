@@ -9,7 +9,7 @@ URL_VIRTUAL_HOST="testcid.shipmee.duckdns.org"
 PATH_ROOT="/home/core/Shipmee_CID_Workspace"
 CONFIG_ROOT="/home/core/Shipmee_CID"
 
-CONF_TOMCAT_SERVER="$CONFIG_ROOT/$BRANCH-conf/tomcat7/server.xml"
+CONF_TOMCAT_SERVER="$CONFIG_ROOT/$BRANCH-conf/tomcat8/server.xml"
 
 MYSQL_PROJECT_ROUTE="localhost"
 MYSQL_ROOT_PASSWORD="$(date +%s | sha256sum | base64 | head -c 32)"
@@ -34,7 +34,8 @@ git checkout $BRANCH
 
 docker run --rm \
     -v $COMPILE_FOLDER:/root \
-    -v "$PATH_ROOT/war_generation/":/root/.m2 \
+    -v "$PATH_ROOT/war_generation/.m2":/root/.m2 \
+    -w /root \
     maven:3-jdk-8-alpine \
     mvn clean compile war:war
 
@@ -113,7 +114,7 @@ sleep 5
 
 docker run -d --name $ENV_NAME-$BRANCH-tomcat \
     --link $ENV_NAME-$BRANCH-mysql:$MYSQL_PROJECT_ROUTE \
-    -v "$PATH_ROOT_HOST/deploys/$ENV_NAME/$BRANCH/webapps/":/usr/local/tomcat/webapps \
+    -v "$PATH_ROOT/deploys/$ENV_NAME/$BRANCH/webapps/":/usr/local/tomcat/webapps \
     -v "$CONF_TOMCAT_SERVER":/usr/local/tomcat/conf/server.xml \
     --restart=always \
     -e VIRTUAL_HOST="$URL_VIRTUAL_HOST" \
