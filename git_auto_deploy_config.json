@@ -10,10 +10,10 @@
   "repositories": [
     {
       "url": "https://github.com/ISSPUS/Shipmee.git",
-      "branch": "testCID",
+      "branch": "develop",
       "remote": "origin",
-      "path": "/home/core/Shipmee_CID_Workspace/repositories/Shipmee-testCID",
-      "deploy": "echo deploying && bash /home/core/Shipmee_CID/testCID-conf/continuousDeploy.sh"
+      "path": "/home/core/Shipmee_CID_Workspace/repositories/Shipmee-develop",
+      "deploy": "echo deploying && bash /home/core/Shipmee_CID/develop-conf/continuousDeploy.sh"
     }
   ]
 }
