@@ -9,7 +9,7 @@ URL_VIRTUAL_HOST="testcid.shipmee.duckdns.org"
 PATH_ROOT="/home/core/Shipmee_CID_Workspace"
 CONFIG_ROOT="/home/core/Shipmee_CID"
 
-CONF_TOMCAT_SERVER="$CONFIG_ROOT/$BRANCH-conf/tomcat8/server.xml"
+CONF_TOMCAT_SERVER="$CONFIG_ROOT/$BRANCH-conf/tomcat7/server.xml"
 
 MYSQL_PROJECT_ROUTE="localhost"
 MYSQL_ROOT_PASSWORD="$(date +%s | sha256sum | base64 | head -c 32)"
@@ -122,7 +122,7 @@ docker run -d --name $ENV_NAME-$BRANCH-tomcat \
     -e VIRTUAL_PORT=8080 \
     -e "LETSENCRYPT_HOST=$URL_VIRTUAL_HOST" \
     -e "LETSENCRYPT_EMAIL=shipmee.contact@gmail.com" \
-    tomcat:8.5
+    tomcat:7
 
 docker exec $ENV_NAME-$BRANCH-tomcat \
     bash -c "echo "Europe/Madrid" > /etc/timezone && dpkg-reconfigure -f noninteractive tzdata"
