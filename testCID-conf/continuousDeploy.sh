@@ -19,7 +19,6 @@ RANDOM_FOLDER_NAME="$(date +%s | sha256sum | base64 | head -c 4)"
 
 mkdir -p $PATH_ROOT
 
-
 echo "_____________ Generando WAR _____________"
 
 COMPILE_FOLDER="$PATH_ROOT/war_generation/$RANDOM_FOLDER_NAME"
@@ -45,7 +44,7 @@ find "$COMPILE_FOLDER/target/" -follow -name *.war -exec cp {} "$PATH_ROOT/Shipm
 # mv -f $COMPILE_FOLDER/target/Shipmee-*.war $PATH_ROOT/Shipmee-$BRANCH.war
 mv -f $COMPILE_FOLDER/initialize.sql $PATH_ROOT/initialize-$BRANCH.sql
 
-rm -rf $COMPILE_FOLDER
+cat $COMPILE_FOLDER/initialize.sql
 
 
 echo "_____________ Desplegando $ENV_NAME - $BRANCH _____________"
@@ -111,6 +110,17 @@ docker exec $ENV_NAME-$BRANCH-mysql \
 docker restart $ENV_NAME-$BRANCH-mysql
 
 sleep 5
+
+docker run --rm \
+    --link $ENV_NAME-$BRANCH-mysql:$MYSQL_PROJECT_ROUTE \
+    -v $COMPILE_FOLDER/:/root \
+    -v "$PATH_ROOT/war_generation/.m2":/root/.m2 \
+    -w /root \
+    maven:3-jdk-8-alpine \
+    mvn exec:java -Dexec.mainClass="utilities.PopulateDatabase"
+
+rm -rf $COMPILE_FOLDER
+
 
 docker run -d --name $ENV_NAME-$BRANCH-tomcat \
     --user root \
