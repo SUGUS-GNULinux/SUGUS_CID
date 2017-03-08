@@ -78,27 +78,6 @@ http://www.apache.org/licenses/LICENSE-2.0
                proxyPort="443"
                scheme="https"
                 />
-    <Connector port="8080" protocol="HTTP/1.1"
-               connectionTimeout="20000"
-               redirectPort="8443"
-               proxyName="dev.shipmee.es"
-               proxyPort="443"
-               scheme="https"
-                />
-    <Connector port="8080" protocol="HTTP/1.1"
-               connectionTimeout="20000"
-               redirectPort="8443"
-               proxyName="shipmee.duckdns.org"
-               proxyPort="443"
-               scheme="https"
-                />
-    <Connector port="8080" protocol="HTTP/1.1"
-               connectionTimeout="20000"
-               redirectPort="8443"
-               proxyName="dev.shipmee.duckdns.org"
-               proxyPort="443"
-               scheme="https"
-                />
     <!-- A "Connector" using the shared thread pool-->
     <!--
     <Connector executor="tomcatThreadPool"

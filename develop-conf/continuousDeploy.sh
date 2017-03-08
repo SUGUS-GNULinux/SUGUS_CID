@@ -4,7 +4,7 @@ URL_REPO="https://github.com/ISSPUS/Shipmee.git"
 BRANCH="develop"
 
 ENV_NAME="Shipmee"
-URL_VIRTUAL_HOST="shipmee.es,dev.shipmee.es,shipmee.duckdns.org,dev.shipmee.duckdns.org"
+URL_VIRTUAL_HOST="shipmee.es"
 
 PATH_ROOT="/home/core/Shipmee_CID_Workspace"
 CONFIG_ROOT="/home/core/Shipmee_CID"
