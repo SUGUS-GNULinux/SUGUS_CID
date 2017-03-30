@@ -74,7 +74,7 @@ http://www.apache.org/licenses/LICENSE-2.0
     <Connector port="8080" protocol="HTTP/1.1"
                connectionTimeout="20000"
                redirectPort="8443"
-               proxyName="dev.shipmee.es"
+               proxyName="shipmee.es"
                proxyPort="443"
                scheme="https"
                 />

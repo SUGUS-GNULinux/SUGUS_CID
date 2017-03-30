@@ -1,10 +1,10 @@
 #!/bin/bash 
 
-URL_REPO="https://github.com/ISSPUS/Shipmee.git"
+URL_REPO="https://github.com/Shipmee/Shipmee.git"
 BRANCH="develop"
 
 ENV_NAME="Shipmee"
-URL_VIRTUAL_HOST="dev.shipmee.es"
+URL_VIRTUAL_HOST="shipmee.es"
 
 PATH_ROOT="/home/core/Shipmee_CID_Workspace"
 CONFIG_ROOT="/home/core/Shipmee_CID"
