@@ -11,8 +11,8 @@ source $CONFIG_ROOT/commonDependencies/DockerUtils.sh
 
 source $CONFIG_ROOT/commonDependencies/variables.sh
 
-BRANCH="develop"
-URL_VIRTUAL_HOST="dev.shipmee.es"
+BRANCH="master"
+URL_VIRTUAL_HOST="shipmee.es"
 CONF_TOMCAT_SERVER="$CONFIG_ROOT/$BRANCH-conf/tomcat7/server.xml"
 
 
@@ -23,11 +23,9 @@ COMPILE_FOLDER="$PATH_ROOT/war_generation/$RANDOM_FOLDER_NAME"
 
 mkdir -p "$COMPILE_FOLDER"
 
-cp -r $REPO_PATH/$ENV_NAME-$BRANCH/* $COMPILE_FOLDER
+cp -r $REPO_PATH/$ENV_NAME-develop/* $COMPILE_FOLDER
 
 cd $COMPILE_FOLDER
-
-git checkout $BRANCH
 
 docker run --rm \
     -v $COMPILE_FOLDER:/root \
