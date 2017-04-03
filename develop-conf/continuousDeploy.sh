@@ -1,31 +1,29 @@
-#!/bin/bash 
+#!/bin/bash
 
-URL_REPO="https://github.com/Shipmee/Shipmee.git"
-BRANCH="develop"
-
-ENV_NAME="Shipmee"
-URL_VIRTUAL_HOST="shipmee.es"
-
-PATH_ROOT="/home/core/Shipmee_CID_Workspace"
 CONFIG_ROOT="/home/core/Shipmee_CID"
 
+## Include dependencies
+
+$CONFIG_ROOT/commonDependencies/DockerUtils.sh
+
+
+## Defining variables
+
+$CONFIG_ROOT/commonDependencies/variables.sh
+
+BRANCH="develop"
+URL_VIRTUAL_HOST="dev.shipmee.es"
 CONF_TOMCAT_SERVER="$CONFIG_ROOT/$BRANCH-conf/tomcat7/server.xml"
 
-MYSQL_PROJECT_ROUTE="localhost"
-MYSQL_ROOT_PASSWORD="$(date +%s | sha256sum | base64 | head -c 32)"
 
-RANDOM_FOLDER_NAME="$(date +%s | sha256sum | base64 | head -c 4)"
-
-
-mkdir -p $PATH_ROOT
-
+## Compiling source
 echo "_____________ Generando WAR _____________"
 
 COMPILE_FOLDER="$PATH_ROOT/war_generation/$RANDOM_FOLDER_NAME"
 
 mkdir -p "$COMPILE_FOLDER"
 
-git clone $URL_REPO $COMPILE_FOLDER
+cp -r $REPO_PATH/$ENV_NAME-$BRANCH/* $COMPILE_FOLDER
 
 cd $COMPILE_FOLDER
 
@@ -38,39 +36,24 @@ docker run --rm \
     maven:3-jdk-8-alpine \
     mvn clean compile war:war
 
-echo "Persistiendo war y otros archivos necesarios"
+
+echo "_____________ Persistiendo war y otros archivos necesarios _____________"
 
 find "$COMPILE_FOLDER/target/" -follow -name *.war -exec cp {} "$PATH_ROOT/Shipmee-$BRANCH.war" \;
 # mv -f $COMPILE_FOLDER/target/Shipmee-*.war $PATH_ROOT/Shipmee-$BRANCH.war
 mv -f $COMPILE_FOLDER/initialize.sql $PATH_ROOT/initialize-$BRANCH.sql
 
 
-echo "_____________ Desplegando $ENV_NAME - $BRANCH _____________"
+echo "_____________ Eliminando despliegue actual _____________"
+
+dockerStopAndRm $ENV_NAME-$BRANCH-mysql
+dockerStopAndRm $ENV_NAME-$BRANCH-tomcat
 
 
-echo "Eliminando despliegue actual"
 
-ContainerId1=`docker ps -qa --filter "name=$ENV_NAME-$BRANCH-mysql"`
-if [ -n "$ContainerId1" ]
-then
-	echo "Stopping and removing existing $ENV_NAME-$BRANCH-mysql container"
-	docker stop $ContainerId1
-	docker rm -v $ContainerId1
-fi
-
-ContainerId2=`docker ps -qa --filter "name=$ENV_NAME-$BRANCH-tomcat"`
-if [ -n "$ContainerId2" ]
-then
-	echo "Stopping and removing existing $ENV_NAME-$BRANCH-tomcat container"
-	docker stop $ContainerId2
-	docker rm -v $ContainerId2
-fi
-
-
-echo "Preparando archivos para despliegue"
+echo "_____________ Preparando archivos _____________"
 
 rm -r "$PATH_ROOT/deploys/$ENV_NAME/$BRANCH/"
-
 mkdir -p "$PATH_ROOT/deploys/$ENV_NAME/$BRANCH/webapps/"
 
 # WAR
@@ -79,8 +62,11 @@ cp $PATH_ROOT/Shipmee-$BRANCH.war $PATH_ROOT/deploys/$ENV_NAME/$BRANCH/webapps/R
 # SQL
 cp $PATH_ROOT/initialize-$BRANCH.sql $PATH_ROOT/deploys/$ENV_NAME/$BRANCH/populate.sql
 
+# Settings
+cp "$CONFIG_ROOT/$BRANCH-conf" "$PATH_ROOT/deploys/$ENV_NAME/$BRANCH/"
 
-echo "Desplegando contenedores para $ENV_NAME - $BRANCH"
+
+echo "_____________ Desplegando contenedores de $ENV_NAME - $BRANCH _____________"
 
 docker run --name $ENV_NAME-$BRANCH-mysql \
     -v "$PATH_ROOT/deploys/$ENV_NAME/$BRANCH/populate.sql":/home/user/populate.sql \
@@ -94,16 +80,16 @@ echo "$ENV_NAME-mysql creado !"
 
 sleep 20
 
+persistPasswords $ENV_NAME-$BRANCH-mysql $BRANCH $MYSQL_ROOT_PASSWORD $PASSWORD_PATH
+
 docker exec $ENV_NAME-$BRANCH-mysql \
     bash -c "exec mysql -uroot -p"$MYSQL_ROOT_PASSWORD" < /home/user/populate.sql"
 
-echo "$ENV_NAME-mysql populado !"
+echo "$ENV_NAME-$BRANCH-mysql populado !"
 
 sleep 20
 
-docker exec $ENV_NAME-$BRANCH-mysql \
-    bash -c "echo "Europe/Madrid" > /etc/timezone && dpkg-reconfigure -f noninteractive tzdata"
-
+dockerTimeZoneGeneric $ENV_NAME-$BRANCH-mysql
 
 docker restart $ENV_NAME-$BRANCH-mysql
 
@@ -124,7 +110,7 @@ docker run -d --name $ENV_NAME-$BRANCH-tomcat \
     --user root \
     --link $ENV_NAME-$BRANCH-mysql:$MYSQL_PROJECT_ROUTE \
     -v "$PATH_ROOT/deploys/$ENV_NAME/$BRANCH/webapps/":/usr/local/tomcat/webapps \
-    -v "$CONF_TOMCAT_SERVER":/usr/local/tomcat/conf/server.xml \
+    -v "$PATH_ROOT/deploys/$ENV_NAME/$BRANCH/tomcat7/server.xml":/usr/local/tomcat/conf/server.xml \
     --restart=always \
     -e VIRTUAL_HOST="$URL_VIRTUAL_HOST" \
     -e VIRTUAL_PORT=8080 \
@@ -132,8 +118,7 @@ docker run -d --name $ENV_NAME-$BRANCH-tomcat \
     -e "LETSENCRYPT_EMAIL=shipmee.contact@gmail.com" \
     tomcat:7
 
-docker exec $ENV_NAME-$BRANCH-tomcat \
-    bash -c "echo "Europe/Madrid" > /etc/timezone && dpkg-reconfigure -f noninteractive tzdata"
+dockerTimeZoneGeneric $ENV_NAME-$BRANCH-tomcat
 
 echo "Aplicación desplegada en https://$URL_VIRTUAL_HOST"
  

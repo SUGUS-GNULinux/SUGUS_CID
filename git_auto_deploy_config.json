@@ -14,6 +14,13 @@
       "remote": "origin",
       "path": "/home/core/Shipmee_CID_Workspace/repositories/Shipmee-develop",
       "deploy": "echo deploying && bash /home/core/Shipmee_CID/develop-conf/continuousDeploy.sh"
+    },
+    {
+      "url": "https://github.com/Shipmee/Shipmee.git",
+      "branch": "master",
+      "remote": "origin",
+      "path": "/home/core/Shipmee_CID_Workspace/repositories/Shipmee-master",
+      "deploy": "echo deploying && bash /home/core/Shipmee_CID/master-conf/continuousDeploy.sh"
     }
   ]
 }
