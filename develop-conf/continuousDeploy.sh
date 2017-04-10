@@ -13,7 +13,9 @@ source $CONFIG_ROOT/commonDependencies/variables.sh
 
 BRANCH="develop"
 URL_VIRTUAL_HOST="dev.shipmee.es"
+URL_IMG_HOST="i.$URL_VIRTUAL_HOST"
 CONF_TOMCAT_SERVER="$CONFIG_ROOT/$BRANCH-conf/tomcat7/server.xml"
+IMG_PATH="$PATH_ROOT/deploys/$ENV_NAME/$BRANCH/images"
 
 
 ## Compiling source
@@ -48,6 +50,7 @@ echo "_____________ Eliminando despliegue actual _____________"
 
 dockerStopAndRm $ENV_NAME-$BRANCH-mysql
 dockerStopAndRm $ENV_NAME-$BRANCH-tomcat
+dockerStopAndRm $ENV_NAME-$BRANCH-images
 
 
 
@@ -55,6 +58,7 @@ echo "_____________ Preparando archivos _____________"
 
 rm -r "$PATH_ROOT/deploys/$ENV_NAME/$BRANCH/"
 mkdir -p "$PATH_ROOT/deploys/$ENV_NAME/$BRANCH/webapps/"
+mkdir -p "$IMG_PATH"
 
 # WAR
 cp $PATH_ROOT/Shipmee-$BRANCH.war $PATH_ROOT/deploys/$ENV_NAME/$BRANCH/webapps/ROOT.war
@@ -64,6 +68,9 @@ cp $PATH_ROOT/initialize-$BRANCH.sql $PATH_ROOT/deploys/$ENV_NAME/$BRANCH/popula
 
 # Settings
 cp -R $CONFIG_ROOT/$BRANCH-conf/* "$PATH_ROOT/deploys/$ENV_NAME/$BRANCH/"
+
+# Permissions
+chmod -R 777 $IMG_PATH
 
 
 echo "_____________ Desplegando contenedores de $ENV_NAME - $BRANCH _____________"
@@ -111,7 +118,10 @@ docker run -d --name $ENV_NAME-$BRANCH-tomcat \
     --link $ENV_NAME-$BRANCH-mysql:$MYSQL_PROJECT_ROUTE \
     -v "$PATH_ROOT/deploys/$ENV_NAME/$BRANCH/webapps/":/usr/local/tomcat/webapps \
     -v "$PATH_ROOT/deploys/$ENV_NAME/$BRANCH/tomcat7/server.xml":/usr/local/tomcat/conf/server.xml \
+    -v "$IMG_PATH":/usr/share/public_images \
     --restart=always \
+    -e IMG_PATH="/usr/share/public_images" \
+    -e URL_IMG_HOST=$URL_IMG_HOST \
     -e VIRTUAL_HOST="$URL_VIRTUAL_HOST" \
     -e VIRTUAL_PORT=8080 \
     -e "LETSENCRYPT_HOST=$URL_VIRTUAL_HOST" \
@@ -119,6 +129,15 @@ docker run -d --name $ENV_NAME-$BRANCH-tomcat \
     tomcat:7
 
 dockerTimeZoneGeneric $ENV_NAME-$BRANCH-tomcat
+
+docker run -d --name $ENV_NAME-$BRANCH-images \
+    -v $IMG_PATH:/usr/share/nginx/html:ro \
+    -e VIRTUAL_HOST="$URL_IMG_HOST" \
+    -e VIRTUAL_PORT=80 \
+    -e "LETSENCRYPT_HOST=$URL_IMG_HOST" \
+    -e "LETSENCRYPT_EMAIL=shipmee.contact@gmail.com" \
+    --restart=always \
+    nginx:1.11-alpine
 
 echo "Aplicación desplegada en https://$URL_VIRTUAL_HOST"
 
