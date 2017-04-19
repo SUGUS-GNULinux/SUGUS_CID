@@ -17,6 +17,8 @@ URL_IMG_HOST="i.$URL_VIRTUAL_HOST"
 CONF_TOMCAT_SERVER="$CONFIG_ROOT/$BRANCH-conf/tomcat7/server.xml"
 IMG_PATH="$PATH_ROOT/deploys/$ENV_NAME/$BRANCH/images"
 
+ENVS_FILE="$SHIPMEE_PRIV_CONFIG_PATH/.env-variables-file_dev"
+
 
 ## Compiling source
 echo "_____________ Generando WAR _____________"
@@ -118,10 +120,12 @@ docker run -d --name $ENV_NAME-$BRANCH-tomcat \
     --link $ENV_NAME-$BRANCH-mysql:$MYSQL_PROJECT_ROUTE \
     -v "$PATH_ROOT/deploys/$ENV_NAME/$BRANCH/webapps/":/usr/local/tomcat/webapps \
     -v "$PATH_ROOT/deploys/$ENV_NAME/$BRANCH/tomcat7/server.xml":/usr/local/tomcat/conf/server.xml \
-    -v "$IMG_PATH":/usr/share/public_images \
+    -v "$IMG_PATH":/public_images \
+    -v /dev/urandom:/dev/random \
     --restart=always \
-    -e IMG_PATH="/usr/share/public_images" \
-    -e URL_IMG_HOST=$URL_IMG_HOST \
+    -e IMG_PATH="/public_images" \
+    -e URL_IMG_HOST="https://$URL_IMG_HOST" \
+    --env-file $ENVS_FILE \
     -e VIRTUAL_HOST="$URL_VIRTUAL_HOST" \
     -e VIRTUAL_PORT=8080 \
     -e "LETSENCRYPT_HOST=$URL_VIRTUAL_HOST" \
