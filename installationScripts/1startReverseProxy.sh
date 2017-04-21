@@ -1,7 +1,7 @@
 #! /bin/bash
 CERTS_PATH=~/LetsEncryptCerts
 
-docker pull jwilder/nginx-proxy
+docker pull jwilder/nginx-proxy:alpine
 
 docker run -d -p 80:80 -p 443:443 \
   --name reverse-proxy \

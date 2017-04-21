@@ -13,6 +13,8 @@ git clone https://github.com/olipo186/Git-Auto-Deploy.git /home/core/Git-Auto-De
 mkdir -p $PATH_ROOT
 mkdir -p $CONFIG_ROOT
 
+docker pull python:2.7
+
 docker run -d \
     --restart=always \
     --name Git-Auto-Deploy \
