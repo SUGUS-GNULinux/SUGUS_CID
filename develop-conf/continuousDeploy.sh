@@ -130,7 +130,7 @@ docker run -d --name $ENV_NAME-$BRANCH-tomcat \
     -e VIRTUAL_PORT=8080 \
     -e "LETSENCRYPT_HOST=$URL_VIRTUAL_HOST" \
     -e "LETSENCRYPT_EMAIL=shipmee.contact@gmail.com" \
-    tomcat:7
+    tomcat:7-jre8
 
 dockerTimeZoneGeneric $ENV_NAME-$BRANCH-tomcat
 
