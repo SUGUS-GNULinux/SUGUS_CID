@@ -7,7 +7,7 @@ PATH_ROOT="/home/core/Shipmee_CID_Workspace"
 REPO_PATH="$PATH_ROOT/repositories"
 PASSWORD_PATH="$PATH_ROOT/generatedPasswords.log"
 
-SHIPMEE_PRIV_CONFIG_PATH="/home/core/Shipmee_Priv_Config"
+SHIPMEE_PRIV_CONFIG_PATH="/home/core/Shipmee_Priv_Config/deploy"
 
 mkdir -p $PATH_ROOT
 
