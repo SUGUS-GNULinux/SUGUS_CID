@@ -85,6 +85,7 @@ docker run --name $ENV_NAME-$BRANCH-mysql \
     --bind-address=0.0.0.0
 
 
+
 echo "$ENV_NAME-mysql creado !"
 
 sleep 20
@@ -113,6 +114,15 @@ docker run --rm \
     mvn exec:java -Dexec.mainClass="utilities.PopulateDatabase"
 
 rm -rf $COMPILE_FOLDER
+
+
+
+
+
+
+
+
+
 
 
 docker run -d --name $ENV_NAME-$BRANCH-tomcat \

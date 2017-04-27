@@ -79,6 +79,7 @@ echo "_____________ Desplegando contenedores de $ENV_NAME - $BRANCH ____________
 
 docker run --name $ENV_NAME-$BRANCH-mysql \
     -v "$PATH_ROOT/deploys/$ENV_NAME/$BRANCH/populate.sql":/home/user/populate.sql \
+    -v "$SHIPMEE_PRIV_CONFIG_PATH/modifyDB.sql":/home/user/modify.sql \
     -e MYSQL_ROOT_PASSWORD="$MYSQL_ROOT_PASSWORD" \
     --restart=always \
     -d mysql:5.7 \
@@ -113,6 +114,15 @@ docker run --rm \
     mvn exec:java -Dexec.mainClass="utilities.PopulateDatabase"
 
 rm -rf $COMPILE_FOLDER
+
+sleep 5
+
+docker exec $ENV_NAME-$BRANCH-mysql \
+    bash -c "exec mysql -uroot -p"$MYSQL_ROOT_PASSWORD" < /home/user/modify.sql"
+
+echo "$ENV_NAME-$BRANCH-mysql cambiadas las contraseñas !"
+
+sleep 20
 
 
 docker run -d --name $ENV_NAME-$BRANCH-tomcat \
