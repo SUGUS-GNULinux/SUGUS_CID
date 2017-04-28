@@ -32,5 +32,5 @@ docker run -d \
     -v $(which docker):/bin/docker \
     python:2.7 \
     bash -c "pip install -r requirements.txt && \
-    python gitautodeploy --config /home/core/Shipmee_CID/git_auto_deploy_config.json"
+    python -m gitautodeploy --config /home/core/Shipmee_CID/git_auto_deploy_config.json"
 

@@ -31,8 +31,6 @@ cp -r $REPO_PATH/$ENV_NAME-develop/* $COMPILE_FOLDER
 
 cd $COMPILE_FOLDER
 
-    # git checkout $BRANCH
-
 docker run --rm \
     -v $COMPILE_FOLDER:/root \
     -v "$PATH_ROOT/war_generation/.m2":/root/.m2 \

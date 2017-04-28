@@ -1,19 +1,58 @@
 {
-  "logfilepath": "/home/core/Shipmee_CID_Workspace/gitautodeploy.log",
-  "host": "0.0.0.0",
-  "port": 8001,
+  // HTTP server options
+  "http-enabled": true,
+  "http-host": "0.0.0.0",
+  "http-port": 8001,
+
+  // HTTPS server options
+  "https-enabled": false,
+  //"https-host": "0.0.0.0",
+  //"https-port": 8002,
+
+  // Web socket server options (used by web UI for real time updates)
+  //"wss-enabled": false,
+  //"wss-host": "0.0.0.0",
+  //"wss-port": 8003,
+
+  // Web user interface options
+  "web-ui-enabled": false,
+  //"web-ui-username": null,
+  //"web-ui-password": null,
+  //"web-ui-whitelist": ["127.0.0.1"],
+
+  // TLS/SSL cert (necessary for HTTPS and web socket server to work)
+  //"ssl-key": null,  // If specified, holds the private key
+  //"ssl-cert": "cert.pem",  // Holds the public key or both the private and public keys
+
+  // File to store a copy of the console output
+  "log-file": "/home/core/Shipmee_CID_Workspace/gitautodeploy.log",
+
+  // File to store the process id (pid)
+  "pid-file": "/home/core/Shipmee_CID_Workspace/.gitautodeploy.pid",
+
+  // Not notify running as root user
+  "allow-root-user" : true,
+
+  // Record all log levels by default
+  "log-level": "INFO",
+
   "global_deploy": [
     "echo Deploy started!",
     "echo Deploy completed!"
   ],
-  "log-level": "INFO",
   "repositories": [
     {
       "url": "https://github.com/Shipmee/Shipmee.git",
       "branch": "develop",
       "remote": "origin",
       "path": "/home/core/Shipmee_CID_Workspace/repositories/Shipmee-develop",
-      "deploy": "echo deploying && bash /home/core/Shipmee_CID/develop-conf/continuousDeploy.sh"
+      "deploy": "echo deploying && bash /home/core/Shipmee_CID/develop-conf/continuousDeploy.sh",
+      "filters": [
+        {
+          "object_kind": "push",
+          "ref": "develop"
+        }
+     ]
     }
   ]
 }
