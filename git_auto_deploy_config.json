@@ -49,9 +49,14 @@
       "deploy": "echo deploying && bash /home/core/Shipmee_CID/develop-conf/continuousDeploy.sh",
       "filters": [
         {
-          "object_kind": "push",
-          "ref": "develop"
+          "ref": "refs/heads/develop"
         }
+     ],
+     "header-filter": {
+        "X-GitHub-Event": "push"
+     }
+    }
+
      ]
     }
   ]
