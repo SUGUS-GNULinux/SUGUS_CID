@@ -51,13 +51,10 @@
         {
           "ref": "refs/heads/develop"
         }
-     ],
-     "header-filter": {
+       ],
+    "header-filter": {
         "X-GitHub-Event": "push"
      }
-    }
-
-     ]
     }
   ]
 }
