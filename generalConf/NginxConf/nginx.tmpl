@@ -44,7 +44,7 @@ map $scheme $proxy_x_forwarded_ssl {
   https on;
 }
 
-gzip_types text/plain text/css application/javascript application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+gzip_types text/plain text/css application/javascript application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript image/svg+xml;
 
 log_format vhost '$host $remote_addr - $remote_user [$time_local] '
                  '"$request" $status $body_bytes_sent '
@@ -75,6 +75,11 @@ client_max_body_size 10m;
 
 # don't send the nginx version number in error pages and Server header
 server_tokens off;
+
+# Enable Compression
+gzip on;
+gzip_proxied any;
+
 {{ end }}
 
 {{ $enable_ipv6 := eq (or ($.Env.ENABLE_IPV6) "") "true" }}
@@ -221,6 +226,28 @@ server {
                 include /etc/nginx/vhost.d/default_location;
                 {{ end }}
 	}
+    location ~*\.(ttf|woff|gif|svg|css|js)$ {
+        expires 1w;
+        add_header Pragma public;
+        add_header Cache-Control "public";
+        
+        {{ if eq $proto "uwsgi" }}
+        include uwsgi_params;
+        uwsgi_pass {{ trim $proto }}://{{ trim $upstream_name }};
+        {{ else }}
+        proxy_pass {{ trim $proto }}://{{ trim $upstream_name }};
+        {{ end }}
+        {{ if (exists (printf "/etc/nginx/htpasswd/%s" $host)) }}
+        auth_basic      "Restricted {{ $host }}";
+        auth_basic_user_file    {{ (printf "/etc/nginx/htpasswd/%s" $host) }};
+        {{ end }}
+        {{ if (exists (printf "/etc/nginx/vhost.d/%s_location" $host)) }}
+        include {{ printf "/etc/nginx/vhost.d/%s_location" $host}};
+        {{ else if (exists "/etc/nginx/vhost.d/default_location") }}
+        include /etc/nginx/vhost.d/default_location;
+        {{ end }}
+    }
+
 }
 
 {{ end }}
