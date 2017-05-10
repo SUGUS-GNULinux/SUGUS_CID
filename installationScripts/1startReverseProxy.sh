@@ -1,5 +1,6 @@
 #! /bin/bash
 CERTS_PATH=~/LetsEncryptCerts
+PROXY_CONF_PATH=/home/core/Shipmee_CID/generalConf/NginxConf/proxy.conf
 
 docker pull jwilder/nginx-proxy:alpine
 
@@ -10,6 +11,7 @@ docker run -d -p 80:80 -p 443:443 \
   -v /etc/nginx/vhost.d \
   -v /usr/share/nginx/html \
   -v /var/run/docker.sock:/tmp/docker.sock:ro \
+  -v $PROXY_CONF_PATH:/etc/nginx/proxy.conf \
   -e ENABLE_IPV6=true \
   jwilder/nginx-proxy:alpine
   
