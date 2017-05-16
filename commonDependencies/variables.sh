@@ -9,6 +9,8 @@ PASSWORD_PATH="$PATH_ROOT/generatedPasswords.log"
 
 SHIPMEE_PRIV_CONFIG_PATH="/home/core/Shipmee_Priv_Config/deploy"
 
+DOCKERS_LOGS_PATH="$PATH_ROOT/old_logs"
+
 mkdir -p $PATH_ROOT
 
 MYSQL_PROJECT_ROUTE="localhost"
