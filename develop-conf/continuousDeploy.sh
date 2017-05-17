@@ -31,6 +31,9 @@ cp -r $REPO_PATH/$ENV_NAME-$BRANCH/* $COMPILE_FOLDER
 
 cd $COMPILE_FOLDER
 
+    # Eliminar robots.txt para que no sea indexada por los buscadores
+rm -f src/main/webapp/robots.txt
+
 docker run --rm \
     -v $COMPILE_FOLDER:/root \
     -v "$PATH_ROOT/war_generation/.m2":/root/.m2 \
