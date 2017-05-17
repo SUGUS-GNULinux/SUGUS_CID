@@ -234,7 +234,7 @@ server {
                 {{ end }}
 	}
     location ~*\.(ttf|woff|gif|svg|css|js)$ {
-        expires 1w;
+        expires 2d;
         add_header Pragma public;
         add_header Cache-Control "public";
         
