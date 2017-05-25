@@ -42,14 +42,14 @@
   ],
   "repositories": [
     {
-      "url": "https://github.com/Shipmee/Shipmee.git",
+      "url": "https://github.com/SUGUS-GNULinux/SUGUS_CID.git",
       "branch": "develop",
       "remote": "origin",
-      "path": "/home/core/Shipmee_CID_Workspace/repositories/Shipmee-develop",
-      "deploy": "echo deploying && bash /home/core/Shipmee_CID/develop-conf/continuousDeploy.sh",
+      "path": "/home/core/SUGUS_CID_Workspace/repositories/sugusbot-dev",
+      "deploy": "echo deploying && bash /home/core/SUGUS_CID/scripts/sugusbot-dev/continuousDeploy.sh",
       "filters": [
         {
-          "ref": "refs/heads/develop"
+          "ref": "refs/heads/Develop"
         }
        ],
     "header-filter": {

@@ -1,2 +1,2 @@
-# Shipmee_CID
+# SUGUS_CID
 Configurations for Continuous Deploy
