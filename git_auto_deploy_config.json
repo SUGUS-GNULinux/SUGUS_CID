@@ -25,10 +25,10 @@
   //"ssl-cert": "cert.pem",  // Holds the public key or both the private and public keys
 
   // File to store a copy of the console output
-  "log-file": "/home/core/Shipmee_CID_Workspace/gitautodeploy.log",
+  "log-file": "/home/core/SUGUS_CID_Workspace/gitautodeploy.log",
 
   // File to store the process id (pid)
-  "pid-file": "/home/core/Shipmee_CID_Workspace/.gitautodeploy.pid",
+  "pid-file": "/home/core/SUGUS_CID_Workspace/.gitautodeploy.pid",
 
   // Not notify running as root user
   "allow-root-user" : true,
@@ -42,8 +42,8 @@
   ],
   "repositories": [
     {
-      "url": "https://github.com/SUGUS-GNULinux/SUGUS_CID.git",
-      "branch": "develop",
+      "url": "https://github.com/SUGUS-GNULinux/SugusBot.git",
+      "branch": "Develop",
       "remote": "origin",
       "path": "/home/core/SUGUS_CID_Workspace/repositories/sugusbot-dev",
       "deploy": "echo deploying && bash /home/core/SUGUS_CID/scripts/sugusbot-dev/continuousDeploy.sh",

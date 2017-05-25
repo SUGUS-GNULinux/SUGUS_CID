@@ -22,6 +22,9 @@ dockerStopAndRm $ENV_NAME-$BRANCH
 echo "_____________ Preparando archivos _____________"
 
 rm -r "$PATH_ROOT/deploys/$ENV_NAME/$BRANCH/"
+
+mkdir -p "$PATH_ROOT/deploys/$ENV_NAME/$BRANCH/"
+
 cp -r $REPO_PATH/$ENV_NAME-$BRANCH/* "$PATH_ROOT/deploys/$ENV_NAME/$BRANCH/"
 
 
@@ -31,7 +34,7 @@ echo "_____________ Desplegando contenedores de $ENV_NAME - $BRANCH ____________
 docker run -d --name $ENV_NAME-$BRANCH \
     --restart=always \
     -v "$PATH_ROOT/deploys/$ENV_NAME/$BRANCH/":/usr/src/sugusbot \
-    -v "$SUGUS_PRIV_CONFIG_PATH/sugusbot-dev/config.ini":/usr/src/sugusbot/myconfig.ini \
+    -v "$SUGUS_PRIV_CONFIG_PATH/sugusbot-dev/myconfig.ini":/usr/src/sugusbot/myconfig.ini \
     -w /usr/src/sugusbot \
     python:3 \
     bash -c "pip install -r requirements.txt && python sugusbot.py"
