@@ -27,6 +27,8 @@ function dockerTimeZoneGeneric {
     bash -c "echo "Europe/Madrid" > /etc/timezone && dpkg-reconfigure -f noninteractive tzdata"
 }
 
+dockerTimeZoneAlpine="apk add tzdata && cp /usr/share/zoneinfo/Europe/Madrid /etc/localtime && echo 'Europe/Madrid' > /etc/timezone && apk del tzdata"
+
 function persistPasswords {
     DOCKER_NAME=$1
     BRANCH=$2
