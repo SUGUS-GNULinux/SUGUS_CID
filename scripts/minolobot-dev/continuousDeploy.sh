@@ -16,20 +16,28 @@ BRANCH="dev"
 
 
 ## Compiling source
-echo "_____________ Generando WAR _____________"
+echo "_____________ Generando build _____________"
 
 COMPILE_FOLDER="$BUILD_FOLDER/$RANDOM_FOLDER_NAME"
+
 mkdir -p "$COMPILE_FOLDER"
 
 cp -r $REPO_PATH/$ENV_NAME-$BRANCH/* $COMPILE_FOLDER
 
-toRemove=$(docker run \
-    -v $COMPILE_FOLDER:/go/src/minolobot \
-    -w /go/src/minolobot \
-    dockerepo/glide \
-    install)
+## Copying vendor folder
+cp -r "$PATH_ROOT/deploys/$ENV_NAME/$BRANCH/vendor" $COMPILE_FOLDER/vendor
 
-docker exec $toRemove go build -o minolobot_launch main.go
+docker run --rm \
+    -v $COMPILE_FOLDER:/go/src/github.com/SUGUS-GNULinux/minolobot \
+    -w /go/src/github.com/SUGUS-GNULinux/minolobot \
+    dockerepo/glide \
+    up
+
+docker run --rm \
+    -v $COMPILE_FOLDER:/go/src/github.com/SUGUS-GNULinux/minolobot \
+    -w /go/src/github.com/SUGUS-GNULinux/minolobot \
+    golang:1.8 \
+    go build -o minolobot_launch main.go
 
 
 echo "_____________ Eliminando despliegue actual _____________"
@@ -56,7 +64,7 @@ docker run -d --name $ENV_NAME-$BRANCH \
     -v "$PATH_ROOT/deploys/$ENV_NAME/$BRANCH/":/usr/src/minolobot \
     -v "$SUGUS_PRIV_CONFIG_PATH/minolobot-dev/token":/usr/src/minolobot/datafiles/token \
     -w /usr/src/minolobot \
-    alpine \
-    $dockerTimeZoneAlpine && ./minolobot_launch
+    golang:1.8 \
+    ./minolobot_launch
 
 echo "Listo"
