@@ -63,6 +63,7 @@ docker run -d --name $ENV_NAME-$BRANCH \
     --restart=always \
     -v "$PATH_ROOT/deploys/$ENV_NAME/$BRANCH/":/usr/src/minolobot \
     -v "$SUGUS_PRIV_CONFIG_PATH/minolobot-dev/token":/usr/src/minolobot/datafiles/token \
+    -v "$SUGUS_PRIV_CONFIG_PATH/minolobot-dev/database.db":/usr/src/minolobot/minolobot.db \
     -w /usr/src/minolobot \
     golang:1.8 \
     ./minolobot_launch
