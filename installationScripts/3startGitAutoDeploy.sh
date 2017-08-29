@@ -25,6 +25,8 @@ docker run -d \
     -p 8001:8001 \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v $(which docker):/bin/docker \
+    -v /run/metadata:/run/metadata \
+    -v /run/torcx:/run/torcx \
     python:2.7 \
     bash -c "pip install -r requirements.txt && \
     python -m gitautodeploy --config /home/core/SUGUS_CID/git_auto_deploy_config.json"
