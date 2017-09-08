@@ -36,7 +36,7 @@ docker run --rm \
 docker run --rm \
     -v $COMPILE_FOLDER:/go/src/github.com/SUGUS-GNULinux/minolobot \
     -w /go/src/github.com/SUGUS-GNULinux/minolobot \
-    golang:1.8 \
+    golang:1.9 \
     go build -o minolobot_launch main.go
 
 
@@ -62,10 +62,10 @@ echo "_____________ Desplegando contenedores de $ENV_NAME - $BRANCH ____________
 docker run -d --name $ENV_NAME-$BRANCH \
     --restart=always \
     -v "$PATH_ROOT/deploys/$ENV_NAME/$BRANCH/":/usr/src/minolobot \
-    -v "$SUGUS_PRIV_CONFIG_PATH/minolobot-dev/token":/usr/src/minolobot/datafiles/token \
-    -v "$SUGUS_PRIV_CONFIG_PATH/minolobot-dev/database.db":/usr/src/minolobot/minolobot.db \
+    -v "$SUGUS_PRIV_CONFIG_PATH/$ENV_NAME-$BRANCH/token":/usr/src/minolobot/datafiles/token \
+    -v "$SUGUS_PRIV_CONFIG_PATH/$ENV_NAME-$BRANCH/database.db":/usr/src/minolobot/minolobot.db \
     -w /usr/src/minolobot \
-    golang:1.8 \
+    golang:1.9 \
     ./minolobot_launch
 
 echo "Listo"
