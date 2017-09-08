@@ -59,11 +59,25 @@
       "url": "https://github.com/SUGUS-GNULinux/minolobot.git",
       "branch": "master",
       "remote": "origin",
+      "path": "/home/core/SUGUS_CID_Workspace/repositories/minolobot-master",
+      "deploy": "echo deploying && bash /home/core/SUGUS_CID/scripts/minolobot-master/continuousDeploy.sh",
+      "filters": [
+        {
+          "ref": "refs/heads/master"
+        }
+       ],
+    "header-filter": {
+        "X-GitHub-Event": "push"
+     }
+    }, {
+      "url": "https://github.com/SUGUS-GNULinux/minolobot.git",
+      "branch": "dev",
+      "remote": "origin",
       "path": "/home/core/SUGUS_CID_Workspace/repositories/minolobot-dev",
       "deploy": "echo deploying && bash /home/core/SUGUS_CID/scripts/minolobot-dev/continuousDeploy.sh",
       "filters": [
         {
-          "ref": "refs/heads/master"
+          "ref": "refs/heads/dev"
         }
        ],
     "header-filter": {
